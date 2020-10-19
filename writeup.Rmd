@@ -27,21 +27,15 @@ Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form
 
 ### Power Analysis
 
-Original effect size, power analysis for samples to achieve 80%, 90%, 95% power to detect that effect size.  Considerations of feasibility for selecting planned sample size.
+Using the G*Power software, the original effect size was calculated to be d = 0.48, and the planned sample dize to achieve 80% power was calculated to be 36
 
 ### Planned Sample
 
-Planned sample size and/or termination rule, sampling frame, known demographics if any, preselection rules if any.
-. 
+Planned sample size = 36
 
-### Materials
+### Materials and Procedure
 
-The study will be conducted in October 2020. Participants will be recruited from Mturk and compensated $0.71 each. 
-
-### Procedure	
-
-
-The study will proceed in four parts, the first three of which will correspond to a component of
+The study will be conducted in October 2020. Participants will be recruited from Amazon Mturk and compensated $0.71 each. The study will proceed in four parts, the first three of which will correspond to a component of
 Bayes’s rule.
 
 "In the first part, each participant was randomly assigned to learn that either a man or a woman had communicated with air traffic control during a flight. Participants provided their priors, posteriors, and likelihoods for this scenario"
@@ -64,18 +58,14 @@ Participants will be excluded who provide priors of either 0% of 100% since thes
 
 Key descriptive statistics such as means and standard errors for judgments among participants in each condition will be computed and some plotted. 
 
-Likelihood ratios will be log-scaled and plotted in each condition. 
-
-A scatterplot will be generated showing the relationship between evaluation of person X (x-axis) and statistical accuracy (model posterior subtracted from reported posterior)
+A will be generated showing the relationship between evaluation of person X (x-axis) and statistical accuracy (model posterior subtracted from reported posterior)
 
 
 **Clarify key analysis of interest here** 
 
-A paired t-test will be conducted to investigate whether participant's model and reported posteriors favor the man or the woman to be the pilot. This will also be used to compute the difference between the model and reported posteriors among those who learnt that the man versus the woman communicated with ATC. 
+The four Likert scales used to generate moral judgments about person X's will be tested for reliability by computing a Cronbach's alpha. The means of all 4 scales will be averaged in each condition to form a composite measure of participant's evaluation of person X. A one sample t-test will coonducted to infer whether composite average is significantly different from the midpoint of 4. The confidence intervals, means and standard deviations will also be plotted. 
 
-The four Likert scales used to generate moral judgments about person X's will be tested for reliability by computing a Cronbach's alpha. The means of all 4 scales will be averaged in each condition to form a composite measure of participant's evaluation of person X.
-
-Finally, a graph will be plotted for the relationship between reported posterior probabilities and evaluations of person X (an average of the four Likert scale DVs).
+The analysis
 
 ### Differences from Original Study
 
@@ -105,9 +95,13 @@ Data preparation following the analysis plan.
 
 #### Load Relevant Libraries and Functions
 library(tidyverse)
+library(dplyr)
 library(ggplot2)
 
 #### Import data
+cdata = read_csv("cao4.csv")
+head(cdata)
+colnames(cdata)
 
 #### Data exclusion / filtering
 
@@ -115,6 +109,61 @@ library(ggplot2)
 ```
 
 ### Confirmatory analysis
+```{r include=F}
+
+## Correlations among items
+cor(cdata[,c("intelligent", "accurate", "fair", "just")])
+ggpairs(cdata[,c("intelligent", "accurate", "fair", "just")])
+
+## Cronbach's alpha
+psych::alpha(x = var(cdata[,c("intelligent", "accurate", "fair", "just")]))
+## alpha = 0.91
+
+## Compute composite average
+cdata$composite.avg <- with(cdata, (intelligent + accurate + fair + just) / 4)
+
+## Descriptives of composite average
+round(x = mean(cdata$composite.avg), digits = 2)
+round(x = std.error(cdata$composite.avg), digits = 2)
+
+## Inferential statistics on composite average
+## One sample t-test against 4
+t.test(x = cdata$composite.avg, 
+       mu = 4)
+
+## Cohen's d
+round(x = cohensD(x = cdata$composite.avg, 
+                  mu = 4), 
+      digits = 2)
+
+## 95% CI
+one.sample.t.cohensD <- function(data, indices) {
+  d <- data[indices,]
+  return(cohensD(x = d$composite.avg, mu = 4))
+}
+
+one.sample.t.cohensD.results <- boot(data = cdata, 
+                                     statistic = one.sample.t.cohensD, 
+                                     R = 10000)
+
+hist(one.sample.t.cohensD.results$t)
+
+round(x = quantile(x = one.sample.t.cohensD.results$t, 
+                   probs = c(0.025, 0.975)), 
+      digits = 2)
+
+## Item means and standard errors
+round(apply(X = cdata[,c("fair", "just", "accurate", "intelligent")], 
+            MARGIN = 2, 
+            FUN = mean), 
+      digits = 2)
+
+round(apply(X = cdata[,c("fair", "just", "accurate", "intelligent")], 
+            MARGIN = 2, 
+            FUN = std.error), 
+      digits = 2)
+
+```
 
 
 For finding about participants making Bayesian judgments: A paired t-test will be conducted to investigate whether participant's model and reported posteriors favor the man or the woman to be the pilot. This will also be used to compute the difference between the model and reported posteriors among those who learnt that the man versus the woman communicated with ATC. 
