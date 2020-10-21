@@ -21,7 +21,7 @@ This paper explored participants' judgments about the likelihood of a hypothetic
 If the results of the original study hold, this study expects to find that participants make Bayesian judgments about the ATC scenario, with actual and model posteriors favoring the communicator being male rather than female. A second key finding will be that participants will judge a third party who makes the same Bayesian judgments as themselves as being unfair, unjust, inaccurate and unintelligent.The study is expected to be conducted on Amazon's task crowd-sourcing marketplace, Mechanical Turk. Some challenges expected include low quality of data due to bots or inattentive participants, and the possibility of participants looking up answers to the filler questions about unrelated statistical phenomena.
 
 Link to the [repository](https://github.com/JosephOuta/cao2019)  
-Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form/SV_eLj4MDvxxAOk0pD)
+Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form/SV_bkXXYsNsvnrTeol)
 
 ## Methods
 
