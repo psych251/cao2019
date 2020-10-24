@@ -99,6 +99,7 @@ library(dplyr)
 library(ggplot2)
 
 #### Import data
+setwd("/Users/JosephOuta/Desktop/GitHub/cao2019/Data")
 cdata = read_csv("cao4.csv")
 head(cdata)
 colnames(cdata)
