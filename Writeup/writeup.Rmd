@@ -95,12 +95,12 @@ Data preparation following the analysis plan.
 
 ```{r setup, include=FALSE}
 #### Load Relevant Libraries and Functions
-
 library(tidyverse)
+library(dplyr)
+library(plyr)
 library(knitr)
+library(srvyr)
 knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
-setwd("///Users/JosephOuta/Desktop/GitHub/cao2019/Data/")
-knitr::opts_knit$set(root.dir = '/Users/JosephOuta/Desktop/GitHub/cao2019/Data/tmp')
 caodata = read_csv("cao_pilotA.csv")
 data <- caodata
 colnames(data)
@@ -220,7 +220,6 @@ str(datac)
 ### Sorting Prior attributions
 
 ```{r}
-
 ## Prior.Man.Pilot: prior probability that man is the Pilot
 datac$Prior.Man.Pilot <- NA
 
@@ -263,15 +262,12 @@ select(datac, Prior.Target.Pilot)
 
 ## ================================================================== ##
 ## Able to update
-count(datac$Prior.Target.Pilot) #this doesn't work for some reason, try the next one
 summarise(datac, Prior.Target.Pilot=n()) #this works!
 
 datac$able.to.update <- ifelse(test = datac$Prior.Target.Pilot == 1 | datac$Prior.Target.Pilot == 0, 
                              yes = "no", 
                              no = "yes")
 
-datac$able.to.update <- factor(x = datac$able.to.update, 
-                             labels = c("no", "yes"))  ## Needs more data for this command to run
 
 count(datac$able.to.update)
   ## x participants can't update their priors
@@ -389,7 +385,7 @@ tapply(X = prior.model.reported$posterior_percent,
 ## ================================================================================================== ##
 ## Create long form version for plotting purposes
 library(reshape2)
-
+prior.model.reported_long <- melt(prior.model.reported, measure.vars = c("prior_percent", "posterior_percent"))
 348*3
   ## Each subject gives three responses: prior, model posterior, and reported posterior
 
@@ -400,6 +396,9 @@ prior.model.reported_long$variable <- factor(prior.model.reported_long$variable,
 prior.model.reported_long$target <- factor(prior.model.reported_long$target, #dont run we dont care about models
                                            levels = c("man", "woman"), 
                                            labels = c("Man", "Woman"))
+
+prior.model.reported_long
+
 ```
 
 
@@ -449,14 +448,10 @@ colnames(data_clean)
 
 # willl be linear ANVOVA of posterior percent vs person X attributions
 
-colnames(data_plot)
-select(prior.model.reported, posterior.odds.ratio)
-
 data_plot <- merge(x = data_clean, 
              y = prior.model.reported[,c("ResponseId", "posterior_percent")], #removed argument "model posterior percent"
              by = "ResponseId")
 
-install.packages("scales")
 library(scales)
 data_plotted <- ggplot(data = data_plot,
     mapping = aes(x = composite.avg, y = posterior_percent, color = target)) + 
@@ -471,26 +466,18 @@ data_plotted <- ggplot(data = data_plot,
   scale_color_discrete(labels = c("Man communicated w/ATC",
                                   "Woman communicated w/ATC"))
 
-
-
-
-
-
+data_plotted
 ```
 
 # Analyses
 
 ```{r}
 
-### first of all combine two columns from multiple data frames
-
 ## Main effect of target
-anova(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
-         data = data_clean))
+data_plot$composite.avg.shifted <- data_plot$composite.avg - 1
 
-## Effect size
-etaSquared(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
-              data = data_clean))
+anova(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
+         data = data_plot))
 
 ```
 
