@@ -22,12 +22,13 @@ If the results of the original study hold, this study expects to find that parti
 
 Link to the [repository](https://github.com/psych251/cao2019)  
 Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form/SV_80xBOBxnipQ3R4x)
+Link to the preregistration: 
 
 ## Methods
 
 ### Power Analysis
 
-Using the G*Power software, the original effect size was calculated to be d = 0.48, and the planned sample dize to achieve 80% power was calculated to be 36
+Using the G*Power software, the original effect size was calculated to be d = 0.48, and the planned sample size to achieve 80% power was calculated to be 36
 
 ### Planned Sample
 
