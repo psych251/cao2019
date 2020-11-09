@@ -89,28 +89,262 @@ You can comment this section out prior to final report with data collection.
 ### Data preparation
 
 Data preparation following the analysis plan.
-	
-```{r include=F}
-### Data Preparation
 
+```{r setup, include=FALSE}
 #### Load Relevant Libraries and Functions
+
 library(tidyverse)
-library(dplyr)
-library(ggplot2)
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+knitr::opts_knit$set(root.dir = '/Users/JosephOuta/Desktop/GitHub/cao2019/Data/')
+data = read_csv("cao_pilotA.csv")
+colnames(data)
 
-#### Import data
-setwd("/Users/JosephOuta/Desktop/GitHub/cao2019/Data")
-cdata = read_csv("cao4.csv")
-head(cdata)
-colnames(cdata)
-
-#### Data exclusion / filtering
-
-#### Prepare data for analysis - create columns etc.
 ```
+	
+# Rename and Tidy columns
+
+```{r}
+data = read_csv("cao_pilotA.csv")
+
+#Man condition
+colnames(data)[11] <- "cond1.prior_manPilot.womanFlightAttendant" #prior prob that man is pilot
+colnames(data)[12] <- "cond1.prior_womanPilot.manFlightAttendant" #prior prob that woman is pilot
+colnames(data)[13] <- "cond1.post_manPilot.womanFlightAttendant" #posterior prob that man is pilot
+colnames(data)[14] <- "cond1.post_womanPilot.manFlightAttendant" #posterior prob woman is pilot
+colnames(data)[15] <- "cond1.lk_percent.male.pilots.comm.ATC" 
+colnames(data)[16] <- "cond1.lk_percent.male.flightAttendants.comm.ATC"
+
+#Woman condition
+colnames(data)[22] <- "cond2.prior_manPilot.womanFlightAttendant" #prior prob that man is pilot
+colnames(data)[23] <- "cond2.prior_womanPilot.manFlightAttendant" #prior prob that woman is pilot
+colnames(data)[24] <- "cond2.post_manPilot.womanFlightAttendant" #posterior prob that man is pilot
+colnames(data)[25] <- "cond2.post_womanPilot.manFlightAttendant" #posterior prob woman is pilot
+colnames(data)[26] <- "cond2.lk_percent.female.pilots.comm.ATC"
+colnames(data)[27] <- "cond2.lk_percent.female.flightAttendants.comm.ATC"
+
+colnames(data)
+```
+
+
+# Tidy rows and remove blanks
+
+```{r}
+#Removing irrelevant column titles
+rowlength <- length(data$ResponseId) #check length of data frame = 
+data <- data[3:rowlength,] #excludes row 1 and 2
+
+#Removing Survey Preview rows aka Rows with Status 1 and unfinished rows
+data <- filter(data, Status==0)
+data<- filter(data, Finished==1) #Removing unfinished rows
+
+
+## Remove empty/ blank responses
+data_NA <- data %>% #first check who left blank
+  filter(is.na(cond1.prior_manPilot.womanFlightAttendant)) %>% #check what rows are NA in cond1...
+  filter(is.na(cond2.prior_manPilot.womanFlightAttendant)) #...that are also NA in cond2...
+data_NA #these are X participants in total
+
+#then exclude them by response ID
+data <- filter(data, !grepl("R_1GKsC3H2qKzYaUN", ResponseId),#exclude the 6 participants
+                  !grepl(" ", ResponseId),
+                  !grepl(" ", ResponseId),
+                  !grepl(" ", ResponseId),
+                  !grepl(" ", ResponseId),
+                  !grepl(" ", ResponseId),
+                  )
+data
+
+# How many exclusions?
+Blank_excl_total <- length(data$ResponseId) - length(data_noblanks$ResponseId) # 6 exclusions
+Blank_excl_total
+
+
+```
+
+# Arranging columns
+
+```{r}
+#first sort by condition
+data_arr <- arrange(data, cond1.prior_manPilot.womanFlightAttendant)
+
+#create condition column
+datac <- data_arr %>%
+  mutate(condition = ifelse(is.na(cond1.prior_manPilot.womanFlightAttendant), "2", "1")
+         )
+```
+
+# Convert judgments from factor to numeric
+
+```{r}
+
+## ========================================== ##
+## Convert judgments from factor to numeric
+str(datac)
+colnames(datac)
+
+#11 to 16 and 22 to 27
+
+#cond1
+datac[11:16] <- sapply(X = datac[11:16], 
+                     FUN = as.character)
+
+datac[11:16] <- sapply(X = datac[11:16],
+                     FUN = as.numeric)
+
+
+#cond2
+datac[22:27] <- sapply(X = datac[22:27], 
+                     FUN = as.character)
+
+datac[22:27] <- sapply(X = datac[22:27],
+                     FUN = as.numeric)
+
+## ========================================== ##
+## Convert attributions from factor to numeric
+str(datac)
+colnames(datac)
+  
+ ## cond 1 
+datac[17:20] <- sapply(X = datac[17:20], 
+                     FUN = as.character)
+
+datac[17:20] <- sapply(X = datac[17:20], 
+                     FUN = as.numeric)
+
+# cond2
+datac[28:31] <- sapply(X = datac[28:31], 
+                     FUN = as.character)
+
+datac[28:31] <- sapply(X = datac[28:31], 
+                     FUN = as.numeric)
+
+str(datac)
+colnames(datac)
+## ========================================== ##
+
+```
+
+
+#Sorting Prior attributions
+
+```{r}
+
+## Prior.Man.Pilot: prior probability that man is the Pilot
+datac$Prior.Man.Pilot <- NA
+
+datac$Prior.Man.Pilot[datac$condition == "1"] <- datac$cond1.prior_manPilot.womanFlightAttendant[datac$condition == "1"]
+datac$Prior.Man.Pilot[datac$condition == "2"] <- datac$cond2.prior_manPilot.womanFlightAttendant[datac$condition == "2"]
+
+## Prior.Woman.Pilot: prior probability that woman is the Pilot
+datac$Prior.Woman.Pilot <- NA
+
+datac$Prior.Woman.Pilot[datac$condition == "1"] <- datac$cond1.prior_womanPilot.manFlightAttendant[datac$condition == "1"]
+datac$Prior.Woman.Pilot[datac$condition == "2"] <- datac$cond2.prior_womanPilot.manFlightAttendant[datac$condition == "2"]
+
+#confirm that priors sum up to 100%
+count(with(datac, Prior.Man.Pilot + Prior.Woman.Pilot)) # doesn't work
+datac$Prior.Man.Pilot + datac$Prior.Woman.Pilot  # -->> works #sum is 100
+#some notes:
+datac <- transform(datac, Prior.Man.Pilot = as.numeric(Prior.Man.Pilot), 
+                          Prior.Woman.Pilot = as.numeric(Prior.Woman.Pilot))
+
+# datatest <-  transform(datac, Prior.Man.Pilot = as.numeric(levels(Prior.Man.Pilot))[Prior.Man.Pilot], 
+                          # Prior.Woman.Pilot = as.numeric(levels(Prior.Woman.Pilot))[Prior.Woman.Pilot]
+# )
+
+# count(with(datac, Prior.Man.Pilot + Prior.Woman.Pilot)) -->> doesn't work
+#------------------#
+
+
+## Peak at distribution of priors overall
+hist(datac$Prior.Man.Pilot)
+
+##-----------------------------------##
+datac$target <- NA
+datac[grepl("^1$", datac$condition), "target"] <- "man"
+datac[grepl("^2$", datac$condition), "target"] <- "woman"
+
+datac$target <- factor(x = datac$target, 
+                     levels = c("man", "woman"))
+
+## Prior.Target.Pilot
+datac$Prior.Target.Pilot <- ifelse(test = datac$target == "man", 
+                                 yes = datac$Prior.Man.Pilot, 
+                                 no = datac$Prior.Woman.Pilot)
+
+select(datac, Prior.Target.Pilot)
+
+## ================================================================== ##
+## Able to update
+count(datac$Prior.Target.Pilot) #this doesn't work for some reason, try the next one
+summarise(datac, Prior.Target.Pilot=n()) #this works!
+
+datac$able.to.update <- ifelse(test = datac$Prior.Target.Pilot == 1 | datac$Prior.Target.Pilot == 0, 
+                             yes = "no", 
+                             no = "yes")
+
+datac$able.to.update <- factor(x = datac$able.to.update, 
+                             labels = c("no", "yes"))  ## need more data for this command to run
+
+count(datac$able.to.update)
+  ## 5 participants can't update their priors
+
+
+colnames(datac)
+# exclude columns with demographic info -> for analysis
+data_tidy <- select(datac, ResponseId, 11:32,39:44)
+colnames(data_tidy)
+
+
+```
+
+
+
+#Sorting Posterior Attributions
+
+```{r}
+
+## Posterior.Man.Pilot: posterior probability that man is the Pilot
+datac$Posterior.Man.Pilot <- NA
+
+datac$Posterior.Man.Pilot[datac$condition == "1"] <- datac$cond1.post_manPilot.womanFlightAttendant[datac$condition == "1"]
+datac$Posterior.Man.Pilot[datac$condition == "2"] <- datac$cond2.post_manPilot.womanFlightAttendant[datac$condition == "2"]
+
+## Posterior.Woman.Pilot: prior probability that woman is the Pilot
+datac$Posterior.Woman.Pilot <- NA
+
+datac$Posterior.Woman.Pilot[datac$condition == "1"] <- datac$cond1.post_womanPilot.manFlightAttendant[datac$condition == "1"]
+datac$Posterior.Woman.Pilot[datac$condition == "2"] <- datac$cond2.post_womanPilot.manFlightAttendant[datac$condition == "2"]
+
+## Confirm that posteriors sum to 100
+count(with(dat, Posterior.Man.Pilot + Posterior.Woman.Pilot)) #doesn't work
+datac$Posterior.Man.Pilot + datac$Posterior.Woman.Pilot  # -->> works #sum is 100
+
+## Posterior.Target.Pilot
+datac$Posterior.Target.Pilot <- ifelse(test = datac$target == "man", 
+                                     yes = datac$Posterior.Man.Pilot, 
+                                     no = datac$Posterior.Woman.Pilot)
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Confirmatory analysis
 ```{r include=F}
+
 
 ## Correlations among items
 cor(cdata[,c("intelligent", "accurate", "fair", "just")])
