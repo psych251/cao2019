@@ -96,7 +96,8 @@ Data preparation following the analysis plan.
 library(tidyverse)
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
-knitr::opts_knit$set(root.dir = '/Users/JosephOuta/Desktop/GitHub/cao2019/Data/')
+setwd("///Users/JosephOuta/Desktop/GitHub/cao2019/Data/")
+knitr::opts_knit$set(root.dir = '/Users/JosephOuta/Desktop/GitHub/cao2019/Data/tmp')
 data = read_csv("cao_pilotA.csv")
 colnames(data)
 
@@ -105,8 +106,6 @@ colnames(data)
 # Rename and Tidy columns
 
 ```{r}
-data = read_csv("cao_pilotA.csv")
-
 #Man condition
 colnames(data)[11] <- "cond1.prior_manPilot.womanFlightAttendant" #prior prob that man is pilot
 colnames(data)[12] <- "cond1.prior_womanPilot.manFlightAttendant" #prior prob that woman is pilot
@@ -300,10 +299,37 @@ colnames(data_tidy)
 ```
 
 
-
 #Sorting Posterior Attributions
 
 ```{r}
+
+## ================================================================================================== ##
+## Calculate model posterior; compare to reported posterior
+
+## Create new dataframe
+prior.model.reported <- merge(x = dat[,c("ResponseID", "target",
+                                         "gender", "age",
+                                         "Prior.Man.Pilot", "Prior.Woman.Pilot", "Prior.Target.Pilot", 
+                                         "Posterior.Man.Pilot", "Posterior.Woman.Pilot", "Posterior.Target.Pilot")], 
+                              y = LR.dat[,c("ResponseID", "LR")], 
+                              by = "ResponseID",
+                              all.x = FALSE, 
+                              all.y = TRUE)
+
+## Create prior.odds.ratio: divide differently for when target is man vs. woman
+prior.model.reported$prior.odds.ratio <- ifelse(test = prior.model.reported$target == "man", 
+                                                yes = prior.model.reported$Prior.Man.Pilot / prior.model.reported$Prior.Woman.Pilot, 
+                                                no = prior.model.reported$Prior.Woman.Pilot / prior.model.reported$Prior.Man.Pilot)
+
+## Create posterior.odds.ratio: divide differently for when target is man vs. woman
+prior.model.reported$posterior.odds.ratio <- ifelse(test = prior.model.reported$target == "man", 
+                                                    yes = prior.model.reported$Posterior.Man.Pilot / prior.model.reported$Posterior.Woman.Pilot, 
+                                                    no = prior.model.reported$Posterior.Woman.Pilot / prior.model.reported$Posterior.Man.Pilot)
+
+
+## Calculate model.posterior.odds.ratio
+prior.model.reported$model.posterior.odds.ratio <- with(prior.model.reported, 
+                                                        prior.odds.ratio * LR)
 
 ## Posterior.Man.Pilot: posterior probability that man is the Pilot
 datac$Posterior.Man.Pilot <- NA
@@ -330,6 +356,95 @@ datac$Posterior.Target.Pilot <- ifelse(test = datac$target == "man",
 
 ```
 
+# Further manipulations
+
+```{r}
+
+## Convert the following to percent format:
+## prior.odds.ratio
+## posterior.odds.ratio
+## model.posterior.odds.ratio
+
+## prior.odds.ratio --> percent format
+prior.model.reported$prior_percent <- with(prior.model.reported, prior.odds.ratio / (1 + prior.odds.ratio) )
+
+tapply(X = prior.model.reported$prior_percent, 
+       INDEX = prior.model.reported$target, 
+       FUN = mean)
+
+## posterior.odds.ratio --> percent format
+prior.model.reported$posterior_percent <- ifelse(test = is.infinite(prior.model.reported$posterior.odds.ratio) == TRUE, 
+                                                 yes = 1, 
+                                                 no = ( prior.model.reported$posterior.odds.ratio / (1 + prior.model.reported$posterior.odds.ratio) )
+                                                )
+
+tapply(X = prior.model.reported$posterior_percent, 
+       INDEX = list(prior.model.reported$target), 
+       FUN = mean)
+
+## model.posterior.odds.ratio --> percent format
+prior.model.reported$model.posterior_percent <- ifelse(test = is.infinite(prior.model.reported$model.posterior.odds.ratio) == TRUE, 
+                                                       yes = 1, 
+                                                       no = ( prior.model.reported$model.posterior.odds.ratio / (1 + prior.model.reported$model.posterior.odds.ratio) )
+                                                      )
+
+tapply(X = prior.model.reported$model.posterior_percent, 
+       INDEX = list(prior.model.reported$target), 
+       FUN = mean)
+
+## Calculate difference
+prior.model.reported$diff <- with(prior.model.reported, posterior_percent - model.posterior_percent)
+
+## ================================================================================================== ##
+## Create long form version for plotting purposes
+prior.model.reported_long <- melt(prior.model.reported, measure.vars = c("prior_percent", "posterior_percent", "model.posterior_percent"))
+348*3
+  ## Each subject gives three responses: prior, model posterior, and reported posterior
+
+prior.model.reported_long$variable <- factor(prior.model.reported_long$variable, 
+                                             levels = c("prior_percent", "model.posterior_percent", "posterior_percent"), 
+                                             labels = c("Prior", "Model Posterior", "Reported Posterior"))
+
+prior.model.reported_long$target <- factor(prior.model.reported_long$target, 
+                                           levels = c("man", "woman"), 
+                                           labels = c("Man", "Woman"))
+
+
+
+```
+
+
+## Plots
+
+```{r}
+
+
+## Main effect of target
+anova(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
+         data = dat))
+
+## Effect size
+etaSquared(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
+              data = dat))
+
+## 95% CI around effect sizes
+  ## Main effect of target
+ci.pvaf(F.value = 84.579, 
+        df.1 = 1,
+        df.2 = 344,
+        N = 348, 
+        conf.level = 0.95)
+
+  ## Interaction
+ci.pvaf(F.value = 10.714, 
+        df.1 = 1,
+        df.2 = 344,
+        N = 348, 
+        conf.level = 0.95)
+
+
+
+```
 
 
 
@@ -338,11 +453,8 @@ datac$Posterior.Target.Pilot <- ifelse(test = datac$target == "man",
 
 
 
+### Person X attributions analyses
 
-
-
-
-### Confirmatory analysis
 ```{r include=F}
 
 
