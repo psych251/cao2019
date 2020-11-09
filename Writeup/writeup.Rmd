@@ -20,8 +20,8 @@ This paper explored participants' judgments about the likelihood of a hypothetic
 
 If the results of the original study hold, this study expects to find that participants make Bayesian judgments about the ATC scenario, with actual and model posteriors favoring the communicator being male rather than female. A second key finding will be that participants will judge a third party who makes the same Bayesian judgments as themselves as being unfair, unjust, inaccurate and unintelligent.The study is expected to be conducted on Amazon's task crowd-sourcing marketplace, Mechanical Turk. Some challenges expected include low quality of data due to bots or inattentive participants, and the possibility of participants looking up answers to the filler questions about unrelated statistical phenomena.
 
-Link to the [repository](https://github.com/JosephOuta/cao2019)  
-Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form/SV_bkXXYsNsvnrTeol)
+Link to the [repository](https://github.com/psych251/cao2019)  
+Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form/SV_80xBOBxnipQ3R4x)
 
 ## Methods
 
@@ -58,19 +58,19 @@ Participants will be excluded who provide priors of either 0% of 100% since thes
 
 Key descriptive statistics such as means and standard errors for judgments among participants in each condition will be computed and some plotted. 
 
-A will be generated showing the relationship between evaluation of person X (x-axis) and statistical accuracy (model posterior subtracted from reported posterior)
-
 
 **Clarify key analysis of interest here** 
 
-The four Likert scales used to generate moral judgments about person X's will be tested for reliability by computing a Cronbach's alpha. The means of all 4 scales will be averaged in each condition to form a composite measure of participant's evaluation of person X. A one sample t-test will coonducted to infer whether composite average is significantly different from the midpoint of 4. The confidence intervals, means and standard deviations will also be plotted. 
+The key statistical test I will replicate will be the two-way ANOVA with linear model fit examining the effects of person X evaluations ([1] negative to [7] positive) and target gender (male or female) on posterior judgments. These findings were represented visually in figure 4. 
+ 
 
 The analysis
 
 ### Differences from Original Study
 
 The study is expected to be replicated with a much smaller sample than the original 353 due to budget concerns. A power analysis will be conducted to determine the ideal sample size under which an effect is expected to be observed. 
-The procedure and analysis will be the same one used in study 5. A key difference is that the replication study will not ask participants to complete filler tasks consisting of unrelated statistical judgments on the second part of the study, as the authors did. These differences are not anticipated to make a differences to the final result. 
+The procedure and analysis will be the same one used in study 5. A key difference is that the replication study will not ask participants to complete filler tasks consisting of unrelated statistical judgments on the second part of the study, as the authors did. This was done because it was determined that the results of the filler questions were inconsequential to the conclusions.
+
 
 ### Methods Addendum (Post Data Collection)
 
@@ -167,7 +167,7 @@ round(apply(X = cdata[,c("fair", "just", "accurate", "intelligent")],
 ```
 
 
-For finding about participants making Bayesian judgments: A paired t-test will be conducted to investigate whether participant's model and reported posteriors favor the man or the woman to be the pilot. This will also be used to compute the difference between the model and reported posteriors among those who learnt that the man versus the woman communicated with ATC. 
+For finding about participants making Bayesian judgments: A two-way  will be conducted to investigate whether participant's model and reported posteriors favor the man or the woman to be the pilot. This will also be used to compute the difference between the model and reported posteriors among those who learnt that the man versus the woman communicated with ATC. 
 
 For finding about moral judgment criticizing person X:The means of all 4 scales will be averaged in each condition to form a composite measure of participant's evaluation of person X.
 
