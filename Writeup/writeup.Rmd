@@ -190,7 +190,6 @@ datac <- data_arr %>%
 datac <- datac %>% 
       mutate_at(vars(contains('cond')), as.numeric) 
 
-
 ## Convert attributions from character to numeric
 datac <- datac %>% #change free responses to different naming convention
   rename(X1.free = c1.free,
@@ -232,8 +231,7 @@ datac <- datac %>%
 datac <- datac %>%
   mutate(Prior.Target.Pilot = ifelse(target == "man", Prior.Man.Pilot, Prior.Woman.Pilot)) ## create prior target column
 
-## Check who is didnt update priors
-
+## Check who didnt update priors
 summarise(datac, Prior.Target.Pilot=n()) #count number of observations 
 
 datac <- datac %>%
@@ -391,9 +389,9 @@ data_clean <- data_clean %>%
          just = ifelse(condition == "1", c1.just, c2.just))
 
 count(data_clean$query)
-# 30/35 # 85% agree that both the man and woman equally likely to be a doctor
-# 4/35 # 11% agree that the man is more likely to be a doctor
-# 1/35 # 3% agree that the woman is more likely to be a doctor
+30/35 # 85% agree that both the man and woman equally likely to be a doctor
+4/35 # 11% agree that the man is more likely to be a doctor
+1/35 # 3% agree that the woman is more likely to be a doctor
 
 ## Create dataset with just composite items
 data.composite <- data_clean %>%
