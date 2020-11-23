@@ -1,4 +1,11 @@
 ---
+title: "Untitled"
+author: "Joseph"
+date: "11/19/2020"
+output: html_document
+---
+
+---
 title: "Replication of People make the Same Bayesian Judgment They Criticize in Others by Cao, Kleiman-Weiner and Banaji (2019, Psychological Science)"
 author: "Joseph Outa (joouta@stanford.edu)"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
@@ -100,10 +107,7 @@ library(dplyr)
 library(plyr)
 library(knitr)
 library(srvyr)
-library(moments)
-library(rstatix)
-library(scales)
-
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
 caodata = read_csv("cao_final.csv")
 colnames(caodata)
 
@@ -133,16 +137,6 @@ data <- caodata %>%
 # Filter out columns with answers to Trivial Questions
 data <- select(data, !starts_with("Q"))
 
-mean(data$age)
-
-data <- data %>%
-  mutate_at(vars(age), as.numeric) 
-
-data <- data %>%
-  mutate_at(vars(gender), as.numeric) 
-
-count(data$gender)
-
 ```
 
 
@@ -160,6 +154,7 @@ data <- filter(data, Finished==1) #Removing unfinished rows
 ## Remove empty/ blank responses in both conditions
 data_noblank <- data %>%
   filter(!is.na(cond1.prior_manPilot.womanFlightAttendant) | !is.na(cond2.prior_manPilot.womanFlightAttendant))
+data_noblank
 
 # How many exclusions?
 Blank_excl_total <- length(data$ResponseId) - length(data_noblank$ResponseId) 
@@ -186,410 +181,304 @@ datac <- data_arr %>%
 ```{r}
 
 ## ========================================== ##
-## Convert judgments from character to numeric
-datac <- datac %>% 
-      mutate_at(vars(contains('cond')), as.numeric) 
+## Convert judgments from factor to numeric
+colnames(datac)
+str(datac)
+
+#11 to 16 and 22 to 27
+
+#cond1
+datac[11:16] <- sapply(X = datac[11:16],
+                     FUN = as.numeric)
+
+
+#cond2
+datac[23:28] <- sapply(X = datac[23:28],
+                     FUN = as.numeric)
 
 ## ========================================== ##
-## Convert attributions from character to numeric
+## Convert attributions from factor to numeric
+str(datac)
+colnames(datac)
+  
+ ## cond 1 
 
-datac <- datac %>% #change free responses to different naming convention
-  rename(X1.free = c1.free,
-         X2.free = c2.free)
+datac[18:21] <- sapply(X = datac[18:21], 
+                     FUN = as.numeric)
 
-datac <- datac %>% #convert all columns with c1 prefix
-      mutate_at(vars(contains('c1')), as.numeric) 
+# cond2
+datac[30:33] <- sapply(X = datac[30:33], 
+                     FUN = as.numeric)
 
-datac <- datac %>% #convert all columns with c2 prefix
-      mutate_at(vars(contains('c2')), as.numeric) 
-
+str(datac)
 ## ========================================== ##
 
 ```
 
 
-### Sort Prior responses - creating Prior and Target columns
+### Sorting Prior attributions
 
 ```{r}
-# new Prior.Man.Pilot column 
-datac <- datac %>%
-  mutate(Prior.Man.Pilot = if_else(!is.na(cond1.prior_manPilot.womanFlightAttendant), cond1.prior_manPilot.womanFlightAttendant, cond2.prior_manPilot.womanFlightAttendant)) 
+## Prior.Man.Pilot: prior probability that man is the Pilot
+datac$Prior.Man.Pilot <- NA
 
-# new Prior.WoMan.Pilot column 
-datac <- datac %>%
-  mutate(Prior.Woman.Pilot = if_else(!is.na(cond1.prior_womanPilot.manFlightAttendant), cond1.prior_womanPilot.manFlightAttendant, cond2.prior_womanPilot.manFlightAttendant)) 
+datac$Prior.Man.Pilot[datac$condition == "1"] <- datac$cond1.prior_manPilot.womanFlightAttendant[datac$condition == "1"]
+datac$Prior.Man.Pilot[datac$condition == "2"] <- datac$cond2.prior_manPilot.womanFlightAttendant[datac$condition == "2"]
 
-datac$Prior.Man.Pilot + datac$Prior.Woman.Pilot  # #confirm priors sum to 100%
+## Prior.Woman.Pilot: prior probability that woman is the Pilot
+datac$Prior.Woman.Pilot <- NA
 
-hist(datac$Prior.Man.Pilot) ## Peak at distribution of priors overall
+datac$Prior.Woman.Pilot[datac$condition == "1"] <- datac$cond1.prior_womanPilot.manFlightAttendant[datac$condition == "1"]
+datac$Prior.Woman.Pilot[datac$condition == "2"] <- datac$cond2.prior_womanPilot.manFlightAttendant[datac$condition == "2"]
 
-## ================================================================== ## Prior Target 
-datac <- datac %>% 
-  mutate(target = if_else(condition == 1, "man", "woman")) #Create target column
+#confirm that priors sum up to 100%
+count(with(datac, Prior.Man.Pilot + Prior.Woman.Pilot)) # doesn't work
+datac$Prior.Man.Pilot + datac$Prior.Woman.Pilot  # -->> works #sum is 100
 
-datac <- datac %>%
-  mutate_at(vars(target), factor) # convert target to factor
+#some notes:
+datac <- transform(datac, Prior.Man.Pilot = as.numeric(Prior.Man.Pilot), 
+                          Prior.Woman.Pilot = as.numeric(Prior.Woman.Pilot))
 
-datac <- datac %>%
-  mutate(Prior.Target.Pilot = ifelse(target == "man", Prior.Man.Pilot, Prior.Woman.Pilot)) ## create prior target column
 
-## ================================================================== ## Able to update
+## Peak at distribution of priors overall
+hist(datac$Prior.Man.Pilot)
 
-summarise(datac, Prior.Target.Pilot=n()) #count number of observations 
 
-datac <- datac %>%
-  mutate(able.to.update = ifelse(Prior.Target.Pilot == 1 | Prior.Target.Pilot == 0, "no", "yes")) 
+##-----------------------------------##
+datac$target <- NA
+datac[grepl("^1$", datac$condition), "target"] <- "man"
+datac[grepl("^2$", datac$condition), "target"] <- "woman"
 
-count(datac$able.to.update)   ## x participants can't update their priors
+datac$target <- factor(x = datac$target, 
+                     levels = c("man", "woman"))
+
+## Prior.Target.Pilot
+datac$Prior.Target.Pilot <- ifelse(test = datac$target == "man", 
+                                 yes = datac$Prior.Man.Pilot, 
+                                 no = datac$Prior.Woman.Pilot)
+
+select(datac, Prior.Target.Pilot)
+
+## ================================================================== ##
+## Able to update
+summarise(datac, Prior.Target.Pilot=n()) #this works!
+
+datac$able.to.update <- ifelse(test = datac$Prior.Target.Pilot == 1 | datac$Prior.Target.Pilot == 0, 
+                             yes = "no", 
+                             no = "yes")
+
+
+count(datac$able.to.update)
+  ## x participants can't update their priors
+
+
+# repeat for posteriors:
+
+## =================================================================== ##
+
+## Posterior.Man.Pilot: posterior probability that man is the Pilot
+datac$Posterior.Man.Pilot <- NA
+
+datac$Posterior.Man.Pilot[datac$condition == "1"] <- datac$cond1.post_manPilot.womanFlightAttendant[datac$condition == "1"]
+datac$Posterior.Man.Pilot[datac$condition == "2"] <- datac$cond2.post_manPilot.womanFlightAttendant[datac$condition == "2"]
+
+## Posterior.Woman.Pilot: prior probability that woman is the Pilot
+datac$Posterior.Woman.Pilot <- NA
+
+datac$Posterior.Woman.Pilot[datac$condition == "1"] <- datac$cond1.post_womanPilot.manFlightAttendant[datac$condition == "1"]
+datac$Posterior.Woman.Pilot[datac$condition == "2"] <- datac$cond2.post_womanPilot.manFlightAttendant[datac$condition == "2"]
+
+
+## Confirm that posteriors sum to 100
+count(with(datac, Posterior.Man.Pilot + Posterior.Woman.Pilot)) # doesn't work
+datac$Posterior.Man.Pilot + datac$Posterior.Woman.Pilot  # -->> works #sum is 100!!
+
+#some notes:
+datac <- transform(datac, Posterior.Man.Pilot = as.numeric(Posterior.Man.Pilot), 
+                          Posterior.Woman.Pilot = as.numeric(Posterior.Woman.Pilot))
+
+## Peak at distribution of posteriors overall
+hist(datac$Posterior.Man.Pilot)
+
+## ================================================================================================= ##
+
+## Posterior.Target.Pilot
+datac$Posterior.Target.Pilot <- ifelse(test = datac$target == "man", 
+                                     yes = datac$Posterior.Man.Pilot, 
+                                     no = datac$Posterior.Woman.Pilot)
+
+
+
+
+colnames(datac)
+# exclude columns with demographic info -> for analysis
+data_clean <- select(datac, ResponseId, 11:34,42:50)
+colnames(data_clean)
 ```
 
-## Sort Posterior responses - Creating Posterior and Posterior Target columns
+
+### Sorting Posterior Attributions
 
 ```{r}
-# new posterior man pilot column
-datac <- datac %>%
-  mutate(Posterior.Man.Pilot = ifelse(!is.na(cond1.post_manPilot.womanFlightAttendant), cond1.post_manPilot.womanFlightAttendant, cond2.post_manPilot.womanFlightAttendant)) 
 
-# new posterior woman pilot column
-datac <- datac %>%
-  mutate(Posterior.Woman.Pilot = ifelse(!is.na(cond1.post_womanPilot.manFlightAttendant), cond1.post_womanPilot.manFlightAttendant, cond2.post_womanPilot.manFlightAttendant)) 
+## ================================================================================================== ##
+## Calculate model posterior; compare to reported posterior
 
-datac$Posterior.Man.Pilot + datac$Posterior.Woman.Pilot  #confirm posteriors sum 100 > works #sum is 100!!
+## Create new dataframe (#maybe don't run this for now)
+# prior.model.reported <- merge(x = dat[,c("ResponseID", "target",
+#                                          "Prior.Man.Pilot", "Prior.Woman.Pilot", "Prior.Target.Pilot", 
+#                                          "Posterior.Man.Pilot", "Posterior.Woman.Pilot", "Posterior.Target.Pilot")], 
+#                               y = LR.dat[,c("ResponseID", "LR")], 
+#                               by = "ResponseID",
+#                               all.x = FALSE, 
+#                               all.y = TRUE)
 
-hist(datac$Posterior.Man.Pilot) ## Peak at distribution of posteriors overall
-
-## =========================================================== ## Posterior Target 
- datac <- datac %>%
-   mutate(Posterior.Target.Pilot= ifelse(target == "man", Posterior.Man.Pilot, Posterior.Woman.Pilot)) #create post target col
-
-  # exclude columns with demographic info -> for analysis
-data_clean <- select(datac, ResponseId,
-                     starts_with("cond"), 
-                     starts_with("c1"),
-                     starts_with("c2"),
-                     Prior.Man.Pilot,
-                     Prior.Woman.Pilot,
-                     target,
-                     Prior.Target.Pilot,
-                     able.to.update,
-                     Posterior.Man.Pilot,
-                     Posterior.Woman.Pilot,
-                     Posterior.Target.Pilot
-                     )
-
-```
+prior.model.reported <- select(data_clean,
+                               ResponseId, target, Prior.Man.Pilot, Prior.Woman.Pilot, Prior.Target.Pilot,
+                               Posterior.Man.Pilot, Posterior.Woman.Pilot, Posterior.Target.Pilot)
+colnames(prior.model.reported)
 
 
-### Calculating percent prior and posteriors
+## ================================================================================================== #
 
-```{r}
-# -> Compute odds ratio then convert to percent
+# GET odds ratio then convert to percent
 
-# create prior odds ratio, divide differently depending on target
-data_clean <- data_clean %>% 
-  mutate(prior.odds.ratio = ifelse(target == "man", 
-                                   Prior.Man.Pilot/ Prior.Woman.Pilot,
-                                   Prior.Woman.Pilot/ Prior.Man.Pilot))
 
-# repeat for posterior odds ratio
-data_clean <- data_clean %>%
-  mutate(posterior.odds.ratio = ifelse(target == "man",
-                                       Posterior.Man.Pilot/ Posterior.Woman.Pilot,
-                                       Posterior.Woman.Pilot/ Posterior.Man.Pilot))
+## Create prior.odds.ratio: divide differently for when target is man vs. woman
+prior.model.reported$prior.odds.ratio <- ifelse(test = prior.model.reported$target == "man", 
+                                                yes = prior.model.reported$Prior.Man.Pilot / prior.model.reported$Prior.Woman.Pilot, 
+                                                no = prior.model.reported$Prior.Woman.Pilot / prior.model.reported$Prior.Man.Pilot)
 
-# --- # 
+## Create posterior.odds.ratio: divide differently for when target is man vs. woman
+prior.model.reported$posterior.odds.ratio <- ifelse(test = prior.model.reported$target == "man", 
+                                                    yes = prior.model.reported$Posterior.Man.Pilot / prior.model.reported$Posterior.Woman.Pilot, 
+                                                    no = prior.model.reported$Posterior.Woman.Pilot / prior.model.reported$Posterior.Man.Pilot)
 
-## prior.odds.ratio --> percent format 
-data_clean <- data_clean %>%
-  mutate(prior_percent = prior.odds.ratio/ (1 + prior.odds.ratio) ) #covert odds ratio to percent format
 
-# check mean prior percent for each target
-data_clean %>%
-  group_by(target) %>%
-  summarize(mean = mean(prior_percent)) #looks like higher priors for man than woman
+## ignore Calculation of model.posterior.odds.ratio
 
-# --- #
+## Convert the following to percent format:
+## prior.odds.ratio
+## posterior.odds.ratio
+## model.posterior.odds.ratio
+
+## prior.odds.ratio --> percent format
+prior.model.reported$prior_percent <- with(prior.model.reported, prior.odds.ratio / (1 + prior.odds.ratio) )
+
+tapply(X = prior.model.reported$prior_percent, 
+       INDEX = prior.model.reported$target, 
+       FUN = mean)
 
 ## posterior.odds.ratio --> percent format
-data_clean <- data_clean %>%
-  mutate(posterior_percent = ifelse(is.infinite(posterior.odds.ratio), 
-                                    1,
-                                    posterior.odds.ratio/ (1 + posterior.odds.ratio))) #convert to percent, infinities = 1
+prior.model.reported$posterior_percent <- ifelse(test = is.infinite(prior.model.reported$posterior.odds.ratio) == TRUE, 
+                                                 yes = 1, 
+                                                 no = ( prior.model.reported$posterior.odds.ratio / (1 + prior.model.reported$posterior.odds.ratio) )
+                                                )
 
-# check mean posterior for each target
-data_clean %>%
-  group_by(target) %>%
-  summarize(mean = mean(posterior_percent)) #still higher for man than woman. But surprised how woman didn't move much higher
+tapply(X = prior.model.reported$posterior_percent, 
+       INDEX = list(prior.model.reported$target), 
+       FUN = mean)
 
-## ========================================================================= ##
+ # excluded model posterior odds cause we dont care about it
 
-
+## ================================================================================================== ##
 ## Create long form version for plotting purposes
-data_clean_long <- data_clean %>%
-  pivot_longer(c("prior_percent", "posterior_percent"),
-               names_to = "variable",
-               values_to = "value")
+library(reshape2)
+prior.model.reported_long <- melt(prior.model.reported, measure.vars = c("prior_percent", "posterior_percent"))
+348*3
+  ## Each subject gives three responses: prior, model posterior, and reported posterior
 
-35*2 ## Each subject gives two responses: prior and reported posterior
+prior.model.reported_long$variable <- factor(prior.model.reported_long$variable, 
+                                             levels = c("prior_percent", "posterior_percent"), #emovd middle argument
+                                             labels = c("Prior", "Reported Posterior")) #Removed middle argument
 
-#convert to factor
-data_clean_long <- data_clean_long %>%
-  mutate_at(vars(target), factor) %>%
-  mutate_at(vars(variable), factor)
+prior.model.reported_long$target <- factor(prior.model.reported_long$target, #dont run we dont care about models
+                                           levels = c("man", "woman"), 
+                                           labels = c("Man", "Woman"))
 
-```
-
-
-# Barplot showing belief updating - average judgments in each condition
-
-
-
-```{r}
-###______________________###
-library(scales)
-
-bar <- data_clean %>%
-  select(prior_percent, posterior_percent, target)
-
-bar_2 <- bar %>%
-  pivot_longer(-c("target"),
-               names_to = "type",
-               values_to = "value")
-
-bar_2 <- bar_2 %>%
-  mutate_at(vars(type), factor) #
-
-stderror <- function(x) sd(x)/sqrt(length(x))
-
-bar_2 <- bar_2 %>%
-  mutate(SE = stderror(value)) # SE = 0.0382
-
-dodge <- position_dodge(width = 0.5)
-
-bar_2$type <- factor(bar_2$type, levels = c("prior_percent", "posterior_percent"))
-
-bar_2_plot <- bar_2 %>%
-  group_by(target, type) %>%
-  summarize(mean = mean(value),
-            SE = stderror(value))
-
-plot_2 <- ggplot(bar_2_plot,
-       aes(x = target, y = mean, fill = type)) +
-  geom_bar(width = 0.7, position= position_dodge(width = 0.75), stat = "identity", ) +
-  labs (y = expression(paste(italic(P), "(Target = Pilot)"))) +
-  scale_y_continuous(breaks = seq(0, 1, 0.10),
-                    label = percent_format()) +
-   geom_errorbar(aes(ymax = mean + SE, ymin = mean - SE), position = position_dodge(0.75), width = 0.2) +
-  scale_fill_discrete(labels = c("prior",
-                                  "posterior")) +
-  theme(legend.title = element_blank()) + 
-  theme(legend.position = c(0.25, 0.2)) + 
-  theme(legend.justification = c(0.25, 0.2)) + 
-  theme(legend.direction = "vertical")  
-plot_2
-
-# lets visualize - focus on the distribution of posterior women
-bxp <- ggplot(bar_2,
-       aes(x = target, y = value,  fill = type)) +
-  geom_boxplot() +
-  theme(legend.title = element_blank()) + 
-  theme(legend.position = c(0.25, 0.2)) + 
-  theme(legend.justification = c(0.25, 0.2)) + 
-  theme(legend.direction = "vertical") 
-  
-bxp
+prior.model.reported_long
 
 ```
 
 
 ### Person X attributions analyses
 
-```{r}
-# Combine/collapse responses into single columns for both conditions
-data_clean <- data_clean %>%
-  mutate(query = ifelse(condition == "1", c1.self, c2.self),
-         intelligent = ifelse(condition == "1", c1.intel, c2.intel),
-         accurate = ifelse(condition == "1", c1.acc, c2.acc),
-         fair = ifelse(condition == "1", c1.fair, c2.acc),
-         just = ifelse(condition == "1", c1.just, c2.just))
+```{r include=F}
 
-count(data_clean$query)
-# 30/35 # 85% agree that both the man and woman equally likely to be a doctor
-# 4/35 # 11% agree that the man is more likely to be a doctor
-# 1/35 # 3% agree that the woman is more likely to be a doctor
+# create column that averages intelligent, fair, just and accurate judgments
+
+colnames(prior.model.reported)
+
+colnames(data_clean)
+
+select(data_clean, c1.intel)
+
+## Collapse responses
+data_clean$intelligent <- ifelse(test = data_clean$condition == "1", 
+                          yes = data_clean$c1.intel, 
+                          no = data_clean$c2.intel)
+
+data_clean$accurate <- ifelse(test = data_clean$condition == "1", 
+                       yes = data_clean$c1.acc, 
+                       no = data_clean$c2.acc)
+
+data_clean$fair <- ifelse(test = data_clean$condition == "1", 
+                   yes = data_clean$c1.fair, 
+                   no = data_clean$c2.fair)
+
+data_clean$just <- ifelse(test = data_clean$condition == "1", 
+                   yes = data_clean$c1.just, 
+                   no = data_clean$c2.just)
 
 ## Create dataset with just composite items
-data.composite <- data_clean %>%
-  select(intelligent, accurate, fair, just) %>%
-  pivot_longer(c("intelligent", "accurate", "fair", "just"),
-               names_to = "variable", 
-               values_to = "value")
+data.composite <- data_clean[,c("intelligent", "accurate", "fair", "just")]
+
+data.composite <- melt(data.composite, measure.vars = c("intelligent", "accurate", "fair", "just"))
+
 
 ## Compute composite average
-data_clean <- data_clean %>%
-  mutate(composite.avg = (intelligent + accurate + fair + just) / 4)
+data_clean$composite.avg <- with(data_clean, (intelligent + accurate + fair + just) / 4)
 
-stderror(data_clean$composite.avg)
-
-t.test(data_clean$composite.avg, mu = 4)
-
+colnames(data_clean)
 ```
-### Reproducing figure 4
+### Plots
 
 ```{r}
 
-# will be linear ANVOVA of posterior percent vs person X attributions
-figure4 <- data_clean %>%
-  ggplot(mapping = aes(x = composite.avg, y = posterior_percent, color = target)) + 
-  geom_smooth(method = "lm", se = TRUE) +
-  theme_classic() +
+# willl be linear ANVOVA of posterior percent vs person X attributions
+
+data_plot <- merge(x = data_clean, 
+             y = prior.model.reported[,c("ResponseId", "posterior_percent")], #removed argument "model posterior percent"
+             by = "ResponseId")
+
+library(scales)
+data_plotted <- ggplot(data = data_plot,
+    mapping = aes(x = composite.avg, y = posterior_percent, color = target)) + 
+  geom_smooth(method = "lm", se = TRUE) + 
+  labs(x = "<-Negative    Positive->\n\nEvaluation of Person X",
+       y = expression(paste(italic(P), "(Target = Pilot)"))) + 
+  coord_cartesian(xlim = c(0.5, 7.5),
+                  ylim = c(0, 1)) + 
   scale_x_continuous(breaks = seq(1, 7, 1)) + 
   scale_y_continuous(breaks = seq(0, 1, 0.10),
-                    label = percent_format()) + 
-  theme(aspect.ratio = 10/7) +
+                     label = percent_format()) + 
   scale_color_discrete(labels = c("Man communicated w/ATC",
-                                  "Woman communicated w/ATC")) +
-  annotate("text", c(1.5, 5.7), y = -0.15,
-           label = c("Negative", "Positive")) +
-  annotate("text", c(3.5), y = -0.2 , label = c("Evaluation of Person X")) +
-  coord_cartesian(xlim = c(1, 6), ylim = c(0, 1), clip = "off") +
-  labs ( y = expression(paste(italic(P), "(Target = Pilot)"))) +
-   theme(plot.margin = unit(c(1, 1, 4, 1), "lines"),
-         axis.title.x = element_blank(),
-         text=element_text(size=12,  family="sans")
-   )
-           
-figure4
+                                  "Woman communicated w/ATC"))
 
+data_plotted
 ```
 
-# Figure 4 with data points
-
-```{r}
-# will be linear ANVOVA of posterior percent vs person X attributions
-figure4_2 <- data_clean %>%
-  ggplot(mapping = aes(x = composite.avg, y = posterior_percent, color = target)) + 
-  geom_point(width=0.2) +
-  geom_smooth(method = "lm", se = TRUE) +
-  theme_classic() +
-  scale_x_continuous(breaks = seq(1, 7, 1)) + 
-  scale_y_continuous(breaks = seq(0, 1, 0.10),
-                    label = percent_format()) + 
-  theme(aspect.ratio = 10/7) +
-  scale_color_discrete(labels = c("Man communicated w/ATC",
-                                  "Woman communicated w/ATC")) +
-  annotate("text", c(1.5, 5.7), y = -0.15,
-           label = c("Negative", "Positive")) +
-  annotate("text", c(3.5), y = -0.2 , label = c("Evaluation of Person X")) +
-  coord_cartesian(xlim = c(1, 6), ylim = c(0, 1), clip = "off") +
-  labs ( y = expression(paste(italic(P), "(Target = Pilot)"))) +
-   theme(plot.margin = unit(c(1, 1, 4, 1), "lines"),
-         axis.title.x = element_blank(),
-         text=element_text(size=12,  family="sans")
-   )
-
-figure4_2
-```
-
-# Normality Checks
-
-```{r}
-#posterior judgments of man condition seem to vary more. lets see distribution of evaluations by condition
-bxp_eval <- data_clean %>%
-  select(composite.avg, target)
-
-bxp_eval <- bxp_eval %>%
-  pivot_longer(-c("target"),
-               names_to = "variable",
-               values_to = "value")
-
-bxp_eval_plot <- ggplot(bxp_eval,
-       aes(x = target, y = value, fill = target)) +
-  geom_boxplot() +
-  geom_jitter(width = 0.2)
-bxp_eval_plot
-
-##Target vs posterior percent vs composite.avg scatterplot
- data_clean %>%
-  ggplot(mapping = aes(x = composite.avg, y = posterior_percent, color = target)) + 
-   geom_point() +
-   geom_smooth() +
-   scale_x_continuous(breaks = seq(1, 7, 1)) + 
-   scale_y_continuous(breaks = seq(0, 1, 0.10),
-                    label = percent_format()) 
-
-
-skewness(bar_2$value, na.rm = TRUE) #coeff is -0.03
-
-bar_2 %>%
-  group_by(target, type) %>%
-  identify_outliers(value) #single non=extreme outlier
-
-bar_2 %>%
-  group_by (target) %>%
-  levene_test(value ~ type) #non=homogeneity of variance in woman condition (0.02 p-value)
-
-```
 # Analyses
 
-
 ```{r}
-library(car)
-library(lsr)
-library(MBESS)
-
-
-## shift composite avgs
-data_clean <- data_clean %>%
-  mutate(composite.avg.shifted = composite.avg - 1)
 
 ## Main effect of target
+data_plot$composite.avg.shifted <- data_plot$composite.avg - 1
+
 anova(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
-         data = data_clean)) # There was a statistically significant main effect of target on posterior judgments F(1, 31) = 12, p = 0.001, etasquared = 0.26, 95% CI = [0.05, 0.47]
-
-#effect size
-etaSquared(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
-         data = data_clean))
-
-## 95% CI around effect sizes
-  ## Main effect of target
-ci.pvaf(F.value = 12, 
-        df.1 = 1,
-        df.2 = 31,
-        N = 35, 
-        conf.level = 0.95)
-
- ## Interaction
-ci.pvaf(F.value = 1.7, 
-        df.1 = 1,
-        df.2 = 31,
-        N = 35, 
-        conf.level = 0.95)
-
-
-  ##----------#
-
-## 95% CI around effect sizes
-  ## Main effect of target
-ci.pvaf(F.value = 84.579, 
-        df.1 = 1,
-        df.2 = 344,
-        N = 348, 
-        conf.level = 0.95)
-
-  ## Interaction
-ci.pvaf(F.value = 10.714, 
-        df.1 = 1,
-        df.2 = 344,
-        N = 348, 
-        conf.level = 0.95)
-
-## Original Cohen's f effect size = 0.48
-## Current Cohen's f effect size = 0.59
+         data = data_plot))
 
 ```
-
-
 
 
 For finding about participants making Bayesian judgments: A two-way  will be conducted to investigate whether participant's model and reported posteriors favor the man or the woman to be the pilot. This will also be used to compute the difference between the model and reported posteriors among those who learnt that the man versus the woman communicated with ATC. 
