@@ -36,10 +36,9 @@ For finding 2 (the key finding - Bayesian judgments regardless of person X evalu
 
 The sample sizes and 37 and 37 make it feasible to attempt replicate both findings simultaneously with a sample size of 37. In order to account for exclusions, a sample of 38 American Mturk workers will be ran. 
 
-
 ### Materials and Procedure
 
- Participants from Amazon Mturk will be recruited and compensated $0.60 each. The study will proceed in 3 parts.
+ Participants from Amazon Mturk will be recruited and compensated $0.85 each. The study will proceed in 3 parts.
 
 > Experiment description 
 The study  will consist of three parts; the first part will query people's prior, posterior, and likelihood estimates of an air traffic control (ATC) communicator either being male or female; the second part will compute a model posterior for each participant and compare it with their actual posterior; and the third part will have the participants evaluate the moral character of a third party who makes a Bayesian judgment about the same scenario.
@@ -378,8 +377,6 @@ dat %>%
            
 ```
 
-
-
 # Normality Checks
 
 ```{r}
@@ -417,6 +414,7 @@ select(dat, composite.avg)
 range(dat$composite.avg)
 
 ```
+
 # Confirmatory Analysis
 
 Replicating finding 2: F(1, 33) = 7.5, p = 0.009, η2 = 0.26, 95% CI = [0.01, 0.39]
@@ -467,7 +465,6 @@ ci.pvaf(F.value = 84.579,
 ### Summary of Replication Attempt
 
 The primary replication target in this study was the ANOVA with linear model fit and the secondary target was the two-tailed t-test. The ANOVA assessed the extent to which the target (man vs woman) and the evaluations of person X (Likert scale from 1 to 7) was related to posterior judgments whereas the t-test assessed the extent to which the evaluations of person X were positive or negative. We were able to successfully replicate the secondary target, finding the judgments to be negative with a composite average p-value of 0.004. The primary target was partially replicated, with the main effect of the target on posterior judgments having a p-value of 0.009 and Cohen's f of 0.59. However, the trend showing an increase in differences between male and female targets as person X evaluations became more positive was not replicated. Instead, an opposite trend was seen, one in which the differences decreased as evaluations became more positive. 
-
 
 Open the discussion section with a paragraph summarizing the primary result from the confirmatory analysis and the assessment of whether it replicated, partially replicated, or failed to replicate the original result.  
 
