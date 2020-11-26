@@ -20,8 +20,8 @@ I chose this paper because it's an experimental application of Bayes theorem, a 
 If the results of the original study hold, this study will have replicated 2 key findings: the first is that participants will judge a third party who makes a Bayesian judgment as being unfair, unjust, inaccurate and unintelligent. The second, and more important one, is that participants make Bayesian judgments about an airline scenario, with posteriors favoring the communicator being male rather than female, and these Bayesian judgments hold regardless of their evaluation of person X. The study is expected to be conducted on Amazon's task crowd-sourcing marketplace, Mechanical Turk. Some possible expected challenges include low quality of data due to bots or inattentive participants, and the possibility of participants looking up answers to the filler questions about unrelated statistical phenomena.
 
 Link to the [repository](https://github.com/psych251/cao2019)  
-Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form/SV_80xBOBxnipQ3R4x)
-Link to the [prergistration](https://osf.io/h37qu)  
+Link to the [Qualtrics survey](https://stanforduniversity.qualtrics.com/jfe/form/SV_80xBOBxnipQ3R4x)   
+Link to the [preregistration](https://osf.io/h37qu)  
 
 ## Methods
 
@@ -34,63 +34,67 @@ For finding 2 (the key finding - Bayesian judgments regardless of person X evalu
 
 ### Planned Sample
 
-The sample sizes and 37 and 37 make it feasible to attempt replicate both findings simultaneously with a sample size of 37. In order to account for exclusions, a sample of 38 American Mturk workers will be ran. 
+The sample sizes 36 for finding 2 and 37 for finding 1 make it feasible to attempt replicate both findings simultaneously with a sample size of 37. To account for possible exclusions, a sample of 38 American Mturk workers will be ran. 
 
 ### Materials and Procedure
 
- Participants from Amazon Mturk will be recruited and compensated $0.85 each. The study will proceed in 3 parts.
+ Participants from Amazon Mturk will be recruited and compensated $0.85 each. The study will proceed in 3 parts, quoted from the original study:
 
-> Experiment description 
-The study  will consist of three parts; the first part will query people's prior, posterior, and likelihood estimates of an air traffic control (ATC) communicator either being male or female; the second part will compute a model posterior for each participant and compare it with their actual posterior; and the third part will have the participants evaluate the moral character of a third party who makes a Bayesian judgment about the same scenario.
+> "In the first part, each participant was randomly assigned to learn that either a man or a woman had communicated with air traffic control during a flight. Participants provided their priors, posteriors, and likelihoods for this scenario" 
 
-"In the first part, each participant was randomly assigned to learn that either a man or a woman had communicated with air traffic control during a flight. Participants provided their priors, posteriors, and likelihoods for this scenario" 
+> "In the second part, participants completed filler tasks consisting of unrelated statistical judgments (e.g., “What percentage of the earth’s surface is covered by land?”) and trivia (e.g., “The German word kummerspeck means excess weight gained from emotional overeating”).
 
-"In the second part, participants completed filler tasks consisting of unrelated statistical judgments (e.g., “What percentage of the earth’s surface is covered by land?”) and trivia (e.g., “The German word kummerspeck means excess weight gained from emotional overeating”).
-
-In the third part, participants completed the same procedure as in Study 1, in which they indicated which of three statements they agreed with and evaluated person X, who made the Bayesian judgment that a man who performed surgery is more likely to be a doctor than a woman who performed surgery.Participants then completed four Likert-type scales that assessed how (a) fair, (b) just, (c) accurate, and (d) intelligent person X’s statement was. Each scale ranged from 1 (e.g., extremely unfair) to 7 (e.g., extremely fair)."
+> In the third part, participants completed the same procedure as in Study 1, in which they indicated which of three statements they agreed with and evaluated person X, who made the Bayesian judgment that a man who performed surgery is more likely to be a doctor than a woman who performed surgery.Participants then completed four Likert-type scales that assessed how (a) fair, (b) just, (c) accurate, and (d) intelligent person X’s statement was. Each scale ranged from 1 (e.g., extremely unfair) to 7 (e.g., extremely fair)."
 
 The first part involving priors, posteriors and likelihoods will be composed of three sub-parts: 
 
-"Part 1: priors. Participants will be instructed to imagine a man and a woman who work at the same airline. One person is a pilot and the other person is not a pilot, but who is the pilot and who is not is unknown. Participants will estimate the percentage chance that each person is the pilot. Because there are two hypotheses—either the man or the woman is the pilot (and the other is the not)—both estimates had to sum to 1. Thus, each participant will provide his or her subjective prior about each person’s profession (e.g., the man has a 75% chance of being the pilot; the woman has a 25% chance of being not the pilot).
+> "Part 1: priors. Participants will be instructed to imagine a man and a woman who work at the same airline. One person is a pilot and the other person is not a pilot, but who is the pilot and who is not is unknown. Participants will estimate the percentage chance that each person is the pilot. Because there are two hypotheses—either the man or the woman is the pilot (and the other is the not)—both estimates had to sum to 1. Thus, each participant will provide his or her subjective prior about each person’s profession (e.g., the man has a 75% chance of being the pilot; the woman has a 25% chance of being not the pilot).
 
-Part 2: posteriors. After providing priors, each participant will be randomly assigned to learn one of the following two pieces of data: (a) The man communicated with air traffic control(b) the woman communicated with air traffic control. After learning this datum, participants will again estimated the percentage chance that each person is the pilot. Thus, each participant will provide his or her subjective posterior.
+> Part 2: posteriors. After providing priors, each participant will be randomly assigned to learn one of the following two pieces of data: (a) The man communicated with air traffic control(b) the woman communicated with air traffic control. After learning this datum, participants will again estimated the percentage chance that each person is the pilot. Thus, each participant will provide his or her subjective posterior.
 
-Part 3: likelihoods. Each participant will estimate two likelihoods: the likelihood of observing the datum given the hypothesis that the target they learned about is the pilot and the likelihood of observing the datum given the hypothesis that the target they learned about is not the pilot. For example, if a participant learned that the woman had communicated with air traffic control, that participant will estimate the percentage of female pilots who communicate with air traffic control and the percentage of female non-pilots who communicate with air traffic control. If a participant learned that the man had communicated with air traffic control, that participant will estimated the percentage of male pilots who communicate with air traffic control and the percentage of male non-pilots who communicate with air traffic control. Thus, each participant will provide his or her subjective likelihood estimates, which will be combined by forming a ratio. Each participant will be randomly assigned to estimate the corresponding likelihoods either before or after providing subjective priors and posteriors. Each participant’s priors and likelihoods will be entered into Bayes’s rule to compute a model posterior, which represents what the participant’s posterior should be from a statistical perspective. This model posterior will be compared with the posterior that the participant actually reported.
+> Part 3: likelihoods. Each participant will estimate two likelihoods: the likelihood of observing the datum given the hypothesis that the target they learned about is the pilot and the likelihood of observing the datum given the hypothesis that the target they learned about is not the pilot. For example, if a participant learned that the woman had communicated with air traffic control, that participant will estimate the percentage of female pilots who communicate with air traffic control and the percentage of female non-pilots who communicate with air traffic control. If a participant learned that the man had communicated with air traffic control, that participant will estimated the percentage of male pilots who communicate with air traffic control and the percentage of male non-pilots who communicate with air traffic control. Thus, each participant will provide his or her subjective likelihood estimates, which will be combined by forming a ratio. Each participant will be randomly assigned to estimate the corresponding likelihoods either before or after providing subjective priors and posteriors. Each participant’s priors and likelihoods will be entered into Bayes’s rule to compute a model posterior, which represents what the participant’s posterior should be from a statistical perspective. This model posterior will be compared with the posterior that the participant actually reported.
 
 
 ### Analysis Plan
 
-Participants will be excluded who provide priors of either 0% of 100% since these cannot be updated in accordance with Bayes rule. 
+Exclusions will be made based on three criteria:
 
-Participants who indicate that they looked up answers to the trivia questions will also be excluded. 
+* Participants who provide priors of either 0% of 100% since these cannot be updated in accordance with Bayes rule. 
 
-An additional exclusion criteria will be an attention check at the end of the study that asks participants to indicate whether they were distracted, had trouble paying attention, or whether something else negatively affected their participation. Participants will be excluded who agree to any one of the above statements.
+* Participants who indicate that they looked up answers to the trivia questions. 
 
-Key descriptive statistics such as means and standard errors for judgments among participants in each condition will be computed and some plotted. 
+* In addition to the two criteria used in the original study, this study will also incorporate an attention check at the end of the survey that asks participants to indicate whether they were distracted, had trouble paying attention, or whether something else negatively affected their participation. Participants will be excluded who agree to any one of the above statements.
 
-The key statistical test used to replicate finding 2 will be a two-way ANOVA with linear model fit examining the effects of person X evaluations ([1] negative to [7] positive) and target gender (male or female) on posterior judgments. These findings were represented visually in figure 4. 
+After exclusions, key descriptive statistics such as means and standard errors for judgments among participants in each condition will be computed, followed by exploratory and confirmatory analyses.
 
-A secondary replication target (finding 1) will be a one-sample t-test to investigate the composite average Likert scores evaluating how fair, accurate, intelligent and just the participants would find Person X's Bayesian judgment. 
+Two findings will be targets of replication:
+
+* The main replication target (finding 2) which constitutes a two-way ANOVA with linear model fit examining the effects of person X evaluations ([1] negative to [7] positive) and target gender (male or female) on posterior judgments. These findings were summarized in an ANOVA table and also represented visually in figure 4. 
+
+* A secondary replication target (finding 1) will be a one-sample t-test to investigate the composite average Likert scores evaluating how fair, accurate, intelligent and just the participants would find Person X's Bayesian judgment. 
  
 
-The analysis
+# The analysis
 
 ### Differences from Original Study
 
-The main difference in implementation is the sample size. The original sample size for study 5 was 353, however this replication will sample 36 participants from Mturk. This amount will help achieve 80% power. 
-Another difference is the added self-reported attention check at the end of the study. This will help filter out participants whose responses are negatively affected by distractions.   
+* The main difference in implementation is the sample size. The original sample size for study 5 was 353, however this replication will sample 38 participants from Mturk.  
+* A second difference is the additional self-reported attention check at the end of the study. This will help filter out participants whose responses are negatively affected by distractions.   
+* This study will not involve calculation of model posteriors, because they are irrelevant to the replication targets. 
 
-### Methods Addendum (Post Data Collection)
+### Methods Addendum (Post-Data Collection)
 
 #### Actual Sample
 
-Data was collected from 38 English-speaking Americans on Mturk. The sample demographics were as follows = age: M = 38.67 years, SD = 11.14; 24 men, 13 women.
-Data exclusions based on rules spelled out in analysis plan:
-+ Exclusion 1 participants who indicated they looked up answers to trivia questions = 1
-+ EXclusion 2 participants who were unable to update priors = 1
-+ Exclusion 3 participants who failed self-reported attention check = 0
-+ Total exclusions = 2
-+ Final sample = 36
+Data was collected from 38 English-speaking Americans on Mturk. The sample demographics were as follows   
+Age: M = 38.67 years, SD = 11.14; 24 men, 13 women.  
+
+The exclusions made based on rules spelled out in analysis plan were as follows:   
+* Exclusion 1: participants who indicated they looked up answers to trivia questions = 1   
+* EXclusion 2: participants who were unable to update priors = 1   
+* Exclusion 3: participants who failed self-reported attention check = 0   
+
+In sum, **2** exclusions were made, leaving a final sample of 36. 
 
 #### Differences from pre-data collection methods plan
 
@@ -98,7 +102,7 @@ Data exclusions based on rules spelled out in analysis plan:
 
 ## Results
  
-# Data Preparation
+### Data Preparation
 
 ```{r setup, include=FALSE}
 #### Load Relevant Libraries and Functions
@@ -121,11 +125,9 @@ filter(dat, attn==!7) #no one reported attention challenges
 filter(dat, Finished == !1) #no one didn't finish study
 tally(dat) #n = 38 participants (excl first 2 rows)
 
-### CHECK WHETHER SORTING BY MAN IRST MAY HAVE AFFECTED MY NEW COLUMNS
-
 ```
 
-# Data Cleaning and exclusions
+Data Cleaning and exclusions
 
 ```{r}
 
@@ -172,7 +174,7 @@ tally(dat)
 ```
 
 
-# Data Wrangling
+### Data Wrangling
 
 Create prior percent and posterior percent columns by first computing odds ratios then converting to percent
 
@@ -217,10 +219,8 @@ dat <- dat %>%
 
 #check
 dat$Prior.Man.Pilot + dat$Prior.Woman.Pilot  # #confirm priors sum to 100%
-hist(dat$Prior.Man.Pilot) # look at distribution of priors 
 count(dat$able.to.update)   # no = can't update priors 
 dat$Posterior.Man.Pilot + dat$Posterior.Woman.Pilot  #confirm posteriors sum 100 
-hist(dat$Posterior.Man.Pilot) # peek at distribution of posteriors overall
 
 #exclude columns w demographic info
 dat <- dat %>%
@@ -249,9 +249,11 @@ dat %>%
 
 ```
 
-# Exploratory analyses
+### Exploratory analyses
 
-### Barplot showing belief updating - average judgments in each condition
+#### Barplot showing belief updating 
+
+Mean prior posteriors in each condition
 
 ```{r}
 
@@ -285,10 +287,9 @@ bar %>%
   theme(legend.justification = c(0.25, 0.2)) + 
   theme(legend.direction = "vertical")  
 
-
 ```
 
-### Boxplot showing distribution of judgments across conditions
+#### Boxplot showing distribution of judgments across conditions
 
 ```{r}
 
@@ -303,16 +304,19 @@ bar %>%
 
 ```
 
-### Analyze evaluations of Person X
+### Analyze evaluations of Person X - Finding 1
 
-Replicating Finding 1 results: M = 2.99, SE = 0.26, t(36) = -3.89, p = 0.0004
-Original results: M = 2.39, SE = 0.08, t(447) = -8.9, p<.001
+Composite mean evaluations in the replication attempt of finding 1 are:   
+M = 2.99, SE = 0.26, t(35) = -3.89, p = 0.0004   
 
-This indicates the finding that the participants judged Person X negatively was successfully replicated, as indicated by means below the midpoint of 4 on the Likert scale (unfair M = 3.17, SE = 0.30; unjust M = 2.86, SE = 0.29; inaccurate M = 2.77, SE = 0.31; unintelligent M = 3.13, SE = 0.29), a composite mean of 2.99, and a significant t-test. 
+The original composite mean and summary statistics are:   
+M = 2.39, SE = 0.08, t(447) = -8.9, p<.001
+
+This indicates that the finding that participants judged Person X negatively was *successfully* replicated, as indicated by Likert means below the midpoint of 4 on the Likert scale (unfair M = 3.17, SE = 0.30; unjust M = 2.86, SE = 0.29; inaccurate M = 2.77, SE = 0.31; unintelligent M = 3.13, SE = 0.29), and a significant (p = 0.0004) composite mean of 2.99
 
 
 ```{r}
-# Combine/collapse responses into single columns for both conditions
+# Combine responses into single columns for both conditions
 dat <- dat %>%
   mutate(query = ifelse(condition == "1", c1.self, c2.self),
          intelligent = ifelse(condition == "1", c1.intel, c2.intel),
@@ -333,7 +337,6 @@ count(dat$query)
 3/35 # 8% agree that the man is more likely to be a doctor
 1/35 # 3% agree that the woman is more likely to be a doctor
 
-mean(dat$composite.avg) #2.99
 stderror(dat$composite.avg) # 0.26
 t.test(dat$composite.avg, mu = 4) #Confirmatory analysis  (Finding 1)
 
@@ -343,21 +346,21 @@ getwd()
 
 ### Reproduce figure 4
 
-Below is the original figure taken from the paper. 
+Below is the original figure taken from the paper:
 
 ```{r echo=FALSE, out.width="100%", fig.align='center'}
 knitr::include_graphics("figures/figure4.png")
 ```
 
-Comparing the original to the replication figure below, it can be seen that they both show consistently higher posteriors for the male than the female target. However, the replication figure has much wider error bars, and the original trend showing higher differences between male and female target as evaluations become more positive is reversed in the replication - instead, the differences decrease as person X evaluations become more positive. The trend in posterior judgments for each target is also reversed, with the male target showing higher posteriors for participants who made negative evaluations of person X, and these posteriors decreasing as evaluations become more positive, whereas in the woman condition, the posteriors start low then increase as judgments of person X become more positive. 
-
+The replication figure:
+ 
 
 ```{r}
 
 # linear ANVOVA of posterior percent vs person X attributions
 dat %>%
   ggplot(mapping = aes(x = composite.avg, y = posterior_percent, color = target)) + 
-  geom_smooth(method = "lm", se = TRUE) +
+  geom_smooth(method = "lm", se = TRUE, fullrange = TRUE) +
   theme_classic() +
   scale_x_continuous(breaks = seq(1, 7, 1)) + 
   scale_y_continuous(breaks = seq(0, 1, 0.10),
@@ -370,57 +373,25 @@ dat %>%
   annotate("text", c(3.5), y = -0.2 , label = c("Evaluation of Person X")) +
   coord_cartesian(xlim = c(1, 6), ylim = c(0, 1), clip = "off") +
   labs ( y = expression(paste(italic(P), "(Target = Pilot)"))) +
-   theme(plot.margin = unit(c(1, 1, 4, 1), "lines"),
+  theme(plot.margin = unit(c(1, 1, 4, 1), "lines"),
          axis.title.x = element_blank(),
          text=element_text(size=12,  family="sans")
    )
            
 ```
 
-# Normality Checks
+Comparing the two figures, it can be seen that both figures show consistently higher posteriors for the male than the female target regardless of person X evaluations. However, the replication figure has a much wider error, and the original trend - showing larger differences between male and female target as evaluations become more positive  - is reversed in the replication; instead, in the replication, posterior differences between the two targets decrease as person X evaluations become more positive.   
+The trend in posterior judgments for each target is also reversed, with the male target showing higher posteriors among participants who made negative evaluations of person X. These posteriors decrease as evaluations become more positive, whereas for the female target, the posteriors start low then increase slightly as judgments of person X become more positive.  
 
-```{r}
 
-#distribution of evaluations by condition
-dat %>%
-  dplyr::select(composite.avg, target) %>%
-  pivot_longer(-c("target"),
-               names_to = "variable",
-               values_to = "value") %>%
-  ggplot(aes(x = target, y = value, fill = target)) +
-  geom_boxplot() +
-  geom_jitter(width = 0.2)
+### Confirmatory Analysis - Finding 2
 
-##Target vs posterior percent vs composite.avg point plot
-dat %>%
-  ggplot(aes(x = composite.avg, y = posterior_percent, color = target)) + 
-   geom_point() +
-   geom_smooth() +
-   scale_x_continuous(breaks = seq(1, 7, 1)) + 
-   scale_y_continuous(breaks = seq(0, 1, 0.10),
-                    label = percent_format()) 
-
-skewness(bar$value, na.rm = TRUE) #coeff is -0.03
-
-bar %>%
-  group_by(target, type) %>%
-  identify_outliers(value) #single non=extreme outlier
-
-bar %>%
-  group_by (target) %>%
-  levene_test(value ~ type) #non-homogeneity of variance in woman condition (0.02 p-value)
-
-select(dat, composite.avg)
-range(dat$composite.avg)
-
-```
-
-# Confirmatory Analysis
-
-Replicating finding 2: F(1, 33) = 7.5, p = 0.009, η2 = 0.26, 95% CI = [0.01, 0.39]
+The results of the ANOVA from replicating finding 2 are as follows:   
+F(1, 32) = 7.4, p = 0.009, η2 = 0.26, 95% CI = [0.01, 0.39]   
 Cohen’s f: 0.59
 
-Original result: F(1, 344) = 84.58, p < .0001, η2 = .19, 95% CI = [.13, .27]
+In contrast, the original results as are follows:   
+F(1, 344) = 84.58, p < .0001, η2 = .19, 95% CI = [.13, .27]   
 Cohen’s f: 0.48
 
 
@@ -432,7 +403,7 @@ dat <- dat %>%
 
 ## Main effect of target
 anova(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
-         data = dat)) # There was a statistically significant main effect of target on posterior judgments F(1, 33) = 7.5, p = 0.009, etasquared = 0.26, 95% CI = [0.05, 0.47] (Finding 2)
+         data = dat)) # There was a statistically significant main effect of target on posterior judgments F(1, 32) = 7.4, p = 0.009, etasquared = 0.26, 95% CI = [0.01, 0.39] (Finding 2)
 
 #effect size
 etaSquared(lm(formula = posterior_percent ~ composite.avg.shifted * target, 
@@ -440,23 +411,11 @@ etaSquared(lm(formula = posterior_percent ~ composite.avg.shifted * target,
 
 ## 95% CI around effect sizes
   ## Main effect of target
-ci.pvaf(F.value = 7.5, 
+ci.pvaf(F.value = 7.4, 
         df.1 = 1,
-        df.2 = 33,
+        df.2 = 32,
         N = 36, 
         conf.level = 0.95)
-
-## 95% CI around effect sizes
-  ## Main effect of target
-ci.pvaf(F.value = 84.579, 
-        df.1 = 1,
-        df.2 = 344,
-        N = 348, 
-        conf.level = 0.95)
-
-
-## Original Cohen's f effect size = 0.48
-## Current Cohen's f effect size = 0.59
 
 ```
 
@@ -464,24 +423,23 @@ ci.pvaf(F.value = 84.579,
 
 ### Summary of Replication Attempt
 
-The primary replication target in this study was the ANOVA with linear model fit and the secondary target was the two-tailed t-test. The ANOVA assessed the extent to which the target (man vs woman) and the evaluations of person X (Likert scale from 1 to 7) was related to posterior judgments whereas the t-test assessed the extent to which the evaluations of person X were positive or negative. We were able to successfully replicate the secondary target, finding the judgments to be negative with a composite average p-value of 0.004. The primary target was partially replicated, with the main effect of the target on posterior judgments having a p-value of 0.009 and Cohen's f of 0.59. However, the trend showing an increase in differences between male and female targets as person X evaluations became more positive was not replicated. Instead, an opposite trend was seen, one in which the differences decreased as evaluations became more positive. 
+There were two statistical tests involved in this replication, first was the primary replication target, the ANOVA with linear model fit; and the secondary target was the two-tailed t-test. The ANOVA assessed the extent to which the target (man vs woman) and the evaluations of person X (Likert scale from 1 to 7) was related to posterior judgments whereas the t-test assessed the extent to which the evaluations of person X were positive or negative.   
 
-Open the discussion section with a paragraph summarizing the primary result from the confirmatory analysis and the assessment of whether it replicated, partially replicated, or failed to replicate the original result.  
+We were able to successfully replicate the secondary target, finding the judgments to be negative with a composite average p-value of 0.004. However we were only able to partially replicate the primary target, with a successful replication of the main effect of the target on posterior judgments having a p-value of 0.009 and Cohen's f of 0.59, but a failed replication of the trend showing an increase in differences between male and female targets as person X evaluations became more positive. Instead, an opposite trend was seen, one in which the differences decreased as evaluations became more positive. 
 
+ 
 ### Commentary
 
 In order to understand the partial replication of finding 2, a follow-up exploratory analysis was conducted. This would provide some insight into the failed attempt to replicate figure 4. The figure was plotted a second time, this time including the data points to investigate the point distribution underlying the lines. 
 
-As can be seen below, the data points are widely dispersed around the graph. It is plausible that the red points are on average higher than the blue points, which confirms the red line being higher than the blue line. However, it is not immediately obvious that the lines fit onto the data provide the best description of the trend in the points. It is likely that the plotted linear trend is not the ideal fit for the given data points. This could be attributed to the relatively small sample size of 36 compared to 353 participants in the original study, which leads to large variances in opinion between participants. It could also be that the judgments are actually too scattered to necessitate a linear fit.
 
-It could be argued that finding 2 was technically successfully replicated, since the original finding was simply that male targets were always judged as more likely to be the targets than female targets regardless of evaluation of person X (which is what was found in the replication), and that the failure to replicate the trend in figure 4 is a separate issue altogether. Furthermore, it could be argued that a replication of figure 4 wasn't explicitly stated in the preregistration therefore it shouldn't have any bearing on the final analysis - specifically that this should be considered a "successful" replication. We don't agree with this analysis because, in the original paper, finding 2 is tied to figure 4, as illustrated by the quote, "But as shown in Figure 4, participants judged that the man was more likely than the woman to be the pilot, regardless of their evaluation of person X, F(1, 344) = 84.58..." This makes a replication of figure 4 an implicit sub-goal of replicating finding 2. As as the writing of this report, the original authors hadn't yet been notified of the results of this replication, so it will be interesting to hear what they think about our interpretation. 
 
 ```{r}
 
 dat %>%
   ggplot(mapping = aes(x = composite.avg, y = posterior_percent, color = target)) + 
   geom_point(width=0.2) +
-  geom_smooth(method = "lm", se = TRUE) +
+  geom_smooth(method = "lm", se = TRUE, fullrange = TRUE) +
   theme_classic() +
   scale_x_continuous(breaks = seq(1, 7, 1)) + 
   scale_y_continuous(breaks = seq(0, 1, 0.10),
@@ -501,3 +459,10 @@ dat %>%
 
 ```
 
+As can be seen in the figure, the data points are widely dispersed around the graph. It is clear that the red points are on average higher than the blue points, which confirms the finding that the male targets were always seen as more likely to be the pilot. However, it is not immediately obvious that the regression lines fit onto the data provide the best description of the trend in the points. The points don't appear to aggregate in any general direction. This could be attributed to the relatively small sample size of 35 used in the study compared to 353 participants in the original study, which could lead to large variances in opinion between participants due to an underpowered study. It could also be that the judgments are actually too scattered to necessitate a linear fit.
+
+It could be argued that finding 2 was technically successfully replicated, since the original finding was simply that male targets were always judged as more likely to be the targets than female targets regardless of evaluation of person X (which was replicated), and that the failure to replicate the trend in figure 4 is a separate issue altogether. Furthermore, it could be argued that a replication of figure 4 wasn't explicitly stated in the preregistration therefore it shouldn't be considered at all in this replication. We don't agree with this analysis because, in the original paper, finding 2 is tied to figure 4, as illustrated by the quote, "But as shown in Figure 4, participants judged that the man was more likely than the woman to be the pilot, regardless of their evaluation of person X, F(1, 344) = 84.58..." This makes a replication of figure 4 an implicit sub-goal of replicating finding 2.
+
+Overall this replication attempt revealed some interesting aspects about the replication process. What does it mean to replicate a figure from a study? The statistical tests could reveal similar results but the figures could still look quite different. Moreover, this experience was a reminder that statistical tests like ANOVAs just identify that there are differences between groups without specifying which particular groups differ and to what extent they do. 
+
+As at the writing of this report, the original authors had not been notified of the results of this replication, so it will be interesting to hear what they think about our interpretation. 
